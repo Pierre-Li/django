@@ -1,0 +1,74 @@
+流程梳理
+	1、创建工程
+		1、在合适位置创建目录
+		2、打开黑屏终端进入到上一步创建的目录下
+		3、输入<django-admin  startproject  project>
+	2、创建项目
+		1、打开黑屏终端，进入project目录
+			执行<python manage.py startapp myApp>
+	3、激活项目
+		修改添加INSTALLED_APPS = ['myApp']
+	4、配置数据库
+		1、修改__init__.py文件
+			import pymysql
+			pymysql.install_as_MySQLdb()
+		2、修改setting.py文件中DATABASES
+				DATABASES = {
+    				'default': {
+        				'ENGINE': 'django.db.backends.mysql',
+        				'NAME': "li",
+        				'USER': "root",
+        				'PASSWORD': "10251206",
+        				'HOST': 'localhost',
+        				'PORT': '3306',
+    				}
+				}
+	5、创建模型类
+		在项目目录下的models.py文件
+		from django.db import models
+			class Grades(models.Model):
+				gname = models.CharField(max_length=20)
+				    gdate = models.DateTimeField()
+				    ggirlnum = models.IntegerField()
+				    gboynum = models.IntegerField()
+				    gdelete = models.BooleanField(default=False)
+
+			class Students(models.Model):
+			    sname = models.CharField(max_length=20)
+			    sgender = models.BooleanField(default=True)
+			    sage = models.IntegerField()
+			    scontend = models.CharField(max_length=20)
+			    sdelete = models.BooleanField(default=False)
+			    sgrade = models.ForeignKey('Grades')
+	6、生成迁移文件
+		执行<python manage.py makemigrations>
+	7、执行迁移文件
+		执行<python manage.py migrate>
+	8、启动服务器
+		python manage.py runserver ip port
+	9、配置站点
+	10、创建模板目录/项目模板目录
+		1、创建模板目录
+			创建template目录，在目录下创建对应项目的模板目录（project/template/myApp）
+		2、配置模板路径
+			修改setting.py文件下的TEMPLATES
+			'DIRS': [os.path.join(BASE_DIR, 'templates')],
+	11、在项目(myApp应用目录)下修改views.py文件
+		from django.http import HttpResponse
+		def idex(request):
+			return render(request, 'myApp/index.html')
+	12、在project下修改urls.py
+		from django.contrib import admin
+			from django.urls import path, include
+			urlpatterns = [
+			    path('admin/', admin.site.urls),
+				path('', include('myApp.urls'))
+			]
+	13、在项目(myApp应用目录)下创建urls.py
+			from django.urls import path
+			from . import views
+			urlpatterns = [
+				path('', views.index)
+				]
+	14、在项目的模板目录(project/template/myApp)下创建html
+		
